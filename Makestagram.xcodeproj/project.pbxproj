@@ -43,10 +43,10 @@
 		62C8C1ED1B06BD6500DC3EA7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 62C8C1EC1B06BD6500DC3EA7 /* Images.xcassets */; };
 		62C8C1F01B06BD6500DC3EA7 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 62C8C1EE1B06BD6500DC3EA7 /* LaunchScreen.xib */; };
 		62C8C1FC1B06BD6500DC3EA7 /* MakestagramTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C8C1FB1B06BD6500DC3EA7 /* MakestagramTests.swift */; };
-		83D6D1431BD9A3E8001E34D1 /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D6D1421BD9A3E8001E34D1 /* TimelineViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		83D6D1451BD9A3FC001E34D1 /* PhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D6D1441BD9A3FC001E34D1 /* PhotoViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		83D6D1471BD9A40E001E34D1 /* FriendSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D6D1461BD9A40E001E34D1 /* FriendSearchViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		83D6D1531BDAAC09001E34D1 /* PhotoTakingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D6D1521BDAAC09001E34D1 /* PhotoTakingHelper.swift */; settings = {ASSET_TAGS = (); }; };
+		83D6D1431BD9A3E8001E34D1 /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D6D1421BD9A3E8001E34D1 /* TimelineViewController.swift */; };
+		83D6D1451BD9A3FC001E34D1 /* PhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D6D1441BD9A3FC001E34D1 /* PhotoViewController.swift */; };
+		83D6D1471BD9A40E001E34D1 /* FriendSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D6D1461BD9A40E001E34D1 /* FriendSearchViewController.swift */; };
+		83D6D1531BDAAC09001E34D1 /* PhotoTakingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D6D1521BDAAC09001E34D1 /* PhotoTakingHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -441,6 +441,7 @@
 				TargetAttributes = {
 					62C8C1DF1B06BD6500DC3EA7 = {
 						CreatedOnToolsVersion = 6.3;
+						DevelopmentTeam = 72U75AEFHH;
 					};
 					62C8C1F41B06BD6500DC3EA7 = {
 						CreatedOnToolsVersion = 6.3;
@@ -717,13 +718,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/Frameworks";
 				INFOPLIST_FILE = Makestagram/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "Make-School.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Makestagram/Makestagram-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -734,13 +739,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/Frameworks";
 				INFOPLIST_FILE = Makestagram/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "Make-School.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Makestagram/Makestagram-Bridging-Header.h";
 			};
 			name = Release;

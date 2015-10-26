@@ -29,6 +29,8 @@ class PhotoTakingHelper : NSObject {
     func showImagePickerController(sourceType: UIImagePickerControllerSourceType) {
         imagePickerController = UIImagePickerController()
         imagePickerController!.sourceType = sourceType
+        imagePickerController!.delegate = self
+        
         self.viewController.presentViewController(imagePickerController!, animated: true, completion: nil)
     }
     
@@ -40,7 +42,7 @@ class PhotoTakingHelper : NSObject {
         alertController.addAction(cancelAction)
         
         let photoLibraryAction = UIAlertAction(title: "Photo from Library", style: .Default) { (action) in
-            self.showImagePickerController(.Camera)
+            self.showImagePickerController(.PhotoLibrary)
         }
         
         alertController.addAction(photoLibraryAction)
@@ -59,4 +61,16 @@ class PhotoTakingHelper : NSObject {
 
 }
 
-
+extension PhotoTakingHelper: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
+        viewController.dismissViewControllerAnimated(false, completion: nil)
+        
+        callback(image)
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        viewController.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+}
