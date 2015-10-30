@@ -31,7 +31,8 @@ class TimelineViewController: UIViewController {
         photoTakingHelper =
             PhotoTakingHelper(viewController: self.tabBarController!) { (image: UIImage?) in
                 let post = Post()
-                post.image.value = image
+                
+                post.image.value = image!
                 post.uploadPost()
         }
     }
@@ -39,30 +40,10 @@ class TimelineViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        // 1
-        let followingQuery = PFQuery(className: "Follow")
-        followingQuery.whereKey("fromUser", equalTo:PFUser.currentUser()!)
-        
-        // 2
-        let postsFromFollowedUsers = Post.query()
-        postsFromFollowedUsers!.whereKey("user", matchesKey: "toUser", inQuery: followingQuery)
-        
-        // 3
-        let postsFromThisUser = Post.query()
-        postsFromThisUser!.whereKey("user", equalTo: PFUser.currentUser()!)
-        
-        // 4
-        let query = PFQuery.orQueryWithSubqueries([postsFromFollowedUsers!, postsFromThisUser!])
-        // 5
-        query.includeKey("user")
-        // 6
-        query.orderByDescending("createdAt")
-        
-        // 7
-        query.findObjectsInBackgroundWithBlock {(result: [AnyObject]?, error: NSError?) -> Void in
-            // 8
+        ParseHelper.timelineRequestForCurrentUser {
+            (result: [AnyObject]?, error: NSError?) -> Void in
             self.posts = result as? [Post] ?? []
-            // 9
+            
             self.tableView.reloadData()
         }
     }
@@ -94,7 +75,11 @@ extension TimelineViewController: UITabBarControllerDelegate {
             // 2
             let cell = tableView.dequeueReusableCellWithIdentifier("PostCell") as! PostTableViewCell
             
-            cell.postImageView.image = posts[indexPath.row].image.value
+            let post = posts[indexPath.row]
+            //1
+            post.downloadImage()
+            //2
+            cell.post = post
             
             return cell
         }

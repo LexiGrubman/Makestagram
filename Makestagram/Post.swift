@@ -43,26 +43,40 @@ class Post : PFObject, PFSubclassing {
     }
     
     func uploadPost() {
+        
         if let image = image.value {
+            
+            photoUploadTask = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler {
+                () -> Void in
+                UIApplication.sharedApplication().endBackgroundTask(self.photoUploadTask!)
+            }
+            
             let imageData = UIImageJPEGRepresentation(image, 0.8)
             let imageFile = PFFile(data: imageData!)
+            imageFile.saveInBackgroundWithBlock(nil)
             
-            // 1
-            photoUploadTask = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler { () -> Void in
-                UIApplication.sharedApplication().endBackgroundTask(self.photoUploadTask!)
-            }
-            
-            // 2
-            imageFile.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
-                // 3
-                UIApplication.sharedApplication().endBackgroundTask(self.photoUploadTask!)
-            }
-            
-            // any uploaded post should be associated with the current user
             user = PFUser.currentUser()
             self.imageFile = imageFile
-            saveInBackgroundWithBlock(nil)
+            saveInBackgroundWithBlock {
+                (success: Bool, error: NSError?) -> Void in
+                UIApplication.sharedApplication().endBackgroundTask(self.photoUploadTask!)
+            }
         }
     }
     
+    func downloadImage() {
+        // if image is not downloaded yet, get it
+        // 1
+        if (image.value == nil) {
+            // 2
+            imageFile?.getDataInBackgroundWithBlock { (data: NSData?, error: NSError?) -> Void in
+                if let data = data {
+                    let image = UIImage(data: data, scale:1.0)!
+                    // 3
+                    self.image.value = image
+                }
+            }
+        }
+    }
+
 }
