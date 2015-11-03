@@ -18,6 +18,8 @@ class Post : PFObject, PFSubclassing {
     @NSManaged var user: PFUser?
     
     var image: Observable<UIImage?> = Observable(nil)
+    var likes: Observable<[PFUser]?> = Observable(nil)
+    
     var photoUploadTask: UIBackgroundTaskIdentifier?
     
     // 2
@@ -34,6 +36,26 @@ class Post : PFObject, PFSubclassing {
         super.init()
     }
     
+    func fetchLikes() {
+        // 1
+        if (likes.value != nil) {
+            return
+        }
+        
+        // 2
+        ParseHelper.likesForPost(self, completionBlock: { (var likes: [AnyObject]?, error: NSError?) -> Void in
+            // 3
+            likes = likes?.filter { like in like[ParseHelper.ParseLikeFromUser] != nil }
+            
+            // 4
+            self.likes.value = likes?.map { like in
+                let like = like as! PFObject
+                let fromUser = like[ParseHelper.ParseLikeFromUser] as! PFUser
+                
+                return fromUser
+            }
+        })
+    }
     override class func initialize() {
         var onceToken : dispatch_once_t = 0;
         dispatch_once(&onceToken) {
@@ -41,6 +63,8 @@ class Post : PFObject, PFSubclassing {
             self.registerSubclass()
         }
     }
+    
+    
     
     func uploadPost() {
         
@@ -76,6 +100,28 @@ class Post : PFObject, PFSubclassing {
                     self.image.value = image
                 }
             }
+        }
+    }
+    
+    func doesUserLikePost(user: PFUser) -> Bool {
+        if let likes = likes.value {
+            return likes.contains(user)
+        } else {
+            return false
+        }
+    }
+    
+    func toggleLikePost(user: PFUser) {
+        if (doesUserLikePost(user)) {
+            //if imiage is liked, unlike it now 
+            //1
+            likes.value = likes.value?.filter { $0 != user }
+            ParseHelper.unlikePost(user, post: self)
+        } else {
+            //if this image is not liked yet, like it now
+            //2
+            likes.value?.append(user)
+            ParseHelper.likePost(user, post: self)
         }
     }
 

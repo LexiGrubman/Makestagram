@@ -8,20 +8,26 @@
 
 import UIKit
 import Parse
+import ConvenienceKit
 
-class TimelineViewController: UIViewController {
+class TimelineViewController: UIViewController, TimelineComponentTarget {
     
-
+    var timelineComponent: TimelineComponent<Post, TimelineViewController>!
+    
+    let defaultRange = 0...4
+    let additionalRangeSize = 5
+    
     @IBOutlet var tableView: UITableView!
     
     var photoTakingHelper: PhotoTakingHelper?
     
-    var posts: [Post] = []
+
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        
+        timelineComponent = TimelineComponent(target: self)
         self.tabBarController?.delegate = self
     }
     
@@ -40,11 +46,17 @@ class TimelineViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        ParseHelper.timelineRequestForCurrentUser {
+        timelineComponent.loadInitialIfRequired()
+    }
+    
+    func loadInRange(range: Range<Int>, completionBlock: ([Post]?) -> Void) {
+        // 1
+        ParseHelper.timelineRequestForCurrentUser(range) {
             (result: [AnyObject]?, error: NSError?) -> Void in
-            self.posts = result as? [Post] ?? []
-            
-            self.tableView.reloadData()
+            // 2
+            let posts = result as? [Post] ?? []
+            // 3
+            completionBlock(posts)
         }
     }
     
@@ -68,20 +80,26 @@ extension TimelineViewController: UITabBarControllerDelegate {
         
         func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
             // 1
-            return posts.count
+            return timelineComponent.content.count
         }
         
         func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
             // 2
             let cell = tableView.dequeueReusableCellWithIdentifier("PostCell") as! PostTableViewCell
             
-            let post = posts[indexPath.row]
-            //1
+            let post = timelineComponent.content[indexPath.row]
             post.downloadImage()
-            //2
+            post.fetchLikes()
             cell.post = post
             
             return cell
         }
+}
+
+extension TimelineViewController: UITableViewDelegate {
+    
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         
+        timelineComponent.targetWillDisplayEntry(indexPath.row)
+    }
 }
